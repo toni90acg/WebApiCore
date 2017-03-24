@@ -25,6 +25,7 @@ namespace WebApiCore
         {
             // Add framework services.
             services.AddMvc();
+            //services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,7 +34,11 @@ namespace WebApiCore
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseJwtBearerAuthentication();
+
             app.UseMvc();
+            //app.UseSwaggerGen();
+            //app.UseSwaggerUi();
         }
     }
 }

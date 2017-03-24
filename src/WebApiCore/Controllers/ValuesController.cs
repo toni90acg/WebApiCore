@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiCore.Controllers
 {
-    [Route("api/[controller]")]
+    //[Route("api/[controller]")]
+    [Authorize]
     public class ValuesController : Controller
     {
         // GET api/values
@@ -22,8 +25,15 @@ namespace WebApiCore.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody]string value)
+        [Produces(typeof(Value))]
+        public IActionResult Post([FromBody]Value value)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            value.Text += "ok";
+            return CreatedAtAction("Get", new Value() {Id = value.Id}, value);
         }
 
         // PUT api/values/5
@@ -36,6 +46,13 @@ namespace WebApiCore.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        public class Value
+        {
+            public int Id { get; set; }
+            [Required]
+            public string Text { get; set; }
         }
     }
 }
